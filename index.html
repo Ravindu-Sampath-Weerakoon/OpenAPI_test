@@ -42,33 +42,22 @@
       pre { background: #020617; color: #e2e8f0; padding: 18px; border-radius: 12px; overflow-x: auto; font-size: 14px; line-height: 1.5; }
       code { font-family: Consolas, monospace; }
       .redoc-section { margin-top: 28px; background: white; border-top: 4px solid var(--accent); }
-      .info-box { background: #eff6ff; border-left: 4px solid var(--accent); padding: 16px; margin-top: 12px; border-radius: 4px; }
     </style>
   </head>
   <body>
     <header>
       <div class="container">
         <h1>Vehicle Body Control API Documentation</h1>
-        <p class="subtitle">Complete technical reference for the ESP32 Vehicle Body Control JSON API.</p>
+        <p class="subtitle">Comprehensive field-by-field reference for the Vehicle Body Control system.</p>
         <div class="badge-row">
           <span class="badge">Wi-Fi Station Mode</span>
-          <span class="badge">JSON Response</span>
+          <span class="badge">JSON API</span>
           <span class="badge">Port 80</span>
         </div>
       </div>
     </header>
 
     <main class="container">
-      <section class="card">
-        <h2>Integration Steps</h2>
-        <ol>
-          <li>Power on the ESP32 module.</li>
-          <li>Ensure it is connected to the Wi-Fi network (SSID: <code>Dialog 4G 048</code>).</li>
-          <li>Obtain the <strong>ESP32 IP Address</strong> from the Serial Monitor.</li>
-          <li>Send a GET request to <code>http://&lt;ESP32_IP&gt;/</code>.</li>
-        </ol>
-      </section>
-
       <section class="card">
         <h2>Full JSON Example</h2>
         <pre><code>{
@@ -96,19 +85,83 @@
       </section>
 
       <section class="card">
-        <h2>Variable Dictionary</h2>
+        <h2>Variable Dictionary (Root Level)</h2>
         <ul class="variable-list">
           <li class="variable-item">
-            <span class="var-name">driveStatus</span><span class="var-type">String</span>
-            <div class="var-desc">Critical safety indicator. If <code>SAFE_TO_DRIVE</code>, the vehicle can proceed. If <code>RISK_DETECTED</code>, a safety issue exists.</div>
+            <span class="var-name">module</span><span class="var-type">String</span>
+            <div class="var-desc">The identification name for this specific submodule.</div>
           </li>
           <li class="variable-item">
-            <span class="var-name">power_mirror_*_position</span><span class="var-type">Integer</span>
-            <div class="var-desc">Mirror offset from center. <strong>Positive</strong> = Up/Right, <strong>Negative</strong> = Down/Left, <strong>0</strong> = Center.</div>
+            <span class="var-name">status</span><span class="var-type">String</span>
+            <div class="var-desc">The high-level execution status of the request (e.g., "success" or "error").</div>
+          </li>
+          <li class="variable-item">
+            <span class="var-name">message</span><span class="var-type">String</span>
+            <div class="var-desc">A human-readable message describing the overall result.</div>
+          </li>
+          <li class="variable-item">
+            <span class="var-name">driveStatus</span><span class="var-type">String</span>
+            <div class="var-desc">Safety indicator. <strong>SAFE_TO_DRIVE</strong> means vehicle is safe; <strong>RISK_DETECTED</strong> means a safety issue was found.</div>
+          </li>
+          <li class="variable-item">
+            <span class="var-name">riskMessage</span><span class="var-type">String</span>
+            <div class="var-desc">Details regarding why a risk was detected (e.g., specific door open).</div>
+          </li>
+        </ul>
+      </section>
+
+      <section class="card">
+        <h2>Variable Dictionary (Data Object)</h2>
+        <ul class="variable-list">
+          <li class="variable-item">
+            <span class="var-name">front_left_door_status</span><span class="var-type">String</span>
+            <div class="var-desc">Current state of the front-left door. Values: "closed", "open".</div>
+          </li>
+          <li class="variable-item">
+            <span class="var-name">front_right_door_status</span><span class="var-type">String</span>
+            <div class="var-desc">Current state of the front-right door. Values: "closed", "open".</div>
+          </li>
+          <li class="variable-item">
+            <span class="var-name">rear_left_door_status</span><span class="var-type">String</span>
+            <div class="var-desc">Current state of the rear-left door. Values: "closed", "open".</div>
+          </li>
+          <li class="variable-item">
+            <span class="var-name">rear_right_door_status</span><span class="var-type">String</span>
+            <div class="var-desc">Current state of the rear-right door. Values: "closed", "open".</div>
+          </li>
+          <li class="variable-item">
+            <span class="var-name">centre_lock_status</span><span class="var-type">String</span>
+            <div class="var-desc">State of the central locking mechanism. Values: "locked", "unlocked".</div>
+          </li>
+          <li class="variable-item">
+            <span class="var-name">power_mirror_left_position</span><span class="var-type">Integer</span>
+            <div class="var-desc">Left mirror offset from neutral. Positive = Up/Right, Negative = Down/Left, 0 = Center.</div>
+          </li>
+          <li class="variable-item">
+            <span class="var-name">power_mirror_right_position</span><span class="var-type">Integer</span>
+            <div class="var-desc">Right mirror offset from neutral. Positive = Up/Right, Negative = Down/Left, 0 = Center.</div>
+          </li>
+          <li class="variable-item">
+            <span class="var-name">rear_boot_door_status</span><span class="var-type">String</span>
+            <div class="var-desc">Current state of the trunk/boot. Values: "closed", "open".</div>
           </li>
           <li class="variable-item">
             <span class="var-name">error_status</span><span class="var-type">String</span>
-            <div class="var-desc">Internal sensor health. "OK" means all hardware sensors are functioning.</div>
+            <div class="var-desc">Internal sensor health status from the ESP32 (e.g., "OK").</div>
+          </li>
+        </ul>
+      </section>
+
+      <section class="card">
+        <h2>Variable Dictionary (Error Object)</h2>
+        <ul class="variable-list">
+          <li class="variable-item">
+            <span class="var-name">code</span><span class="var-type">Integer</span>
+            <div class="var-desc">Error code. 0 indicates no error.</div>
+          </li>
+          <li class="variable-item">
+            <span class="var-name">message</span><span class="var-type">String</span>
+            <div class="var-desc">Specific error description. "None" if healthy.</div>
           </li>
         </ul>
       </section>
