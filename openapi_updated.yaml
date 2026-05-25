@@ -121,11 +121,15 @@ components:
           example: locked
         power_mirror_left_position:
           type: integer
-          description: "**(Integer)** Displacement of left mirror. Positive = Up/Right, Negative = Down/Left, 0 = Center."
+          description: "**(Integer)** Left mirror offset from neutral. Positive = Up/Right, Negative = Down/Left, 0 = Center."
+          minimum: -15
+          maximum: 15
           example: 12
         power_mirror_right_position:
           type: integer
-          description: "**(Integer)** Displacement of right mirror. Positive = Up/Right, Negative = Down/Left, 0 = Center."
+          description: "**(Integer)** Right mirror offset from neutral. Positive = Up/Right, Negative = Down/Left, 0 = Center."
+          minimum: -15
+          maximum: 15
           example: -5
         rear_boot_door_status:
           type: string
