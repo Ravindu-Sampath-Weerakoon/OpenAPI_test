@@ -180,6 +180,14 @@
         display: block;
         min-height: 720px;
       }
+
+      .info-box {
+        background: #eff6ff;
+        border-left: 4px solid var(--accent);
+        padding: 16px;
+        margin-top: 12px;
+        border-radius: 4px;
+      }
     </style>
   </head>
 
@@ -216,24 +224,16 @@
           </div>
 
           <div class="card">
-            <h2>Safety Rule</h2>
-            <table class="status-table">
-              <tr>
-                <th>Type</th>
-                <th>Meaning</th>
-                <th>Controller Action</th>
-              </tr>
-              <tr>
-                <td class="success">SAFE_TO_DRIVE</td>
-                <td>Module works normally and vehicle is safe.</td>
-                <td>Continue operation.</td>
-              </tr>
-              <tr>
-                <td class="error">RISK_DETECTED</td>
-                <td>A safety risk is detected (e.g., door open).</td>
-                <td>Stop or alert the user.</td>
-              </tr>
-            </table>
+            <h2>Mirror Position Logic</h2>
+            <p>The <code>power_mirror_*_position</code> fields indicate displacement from the neutral center:</p>
+            <ul>
+              <li><strong>Positive (+)</strong>: Tilted <strong>Right</strong> or <strong>Up</strong>.</li>
+              <li><strong>Negative (-)</strong>: Tilted <strong>Left</strong> or <strong>Down</strong>.</li>
+              <li><strong>Zero (0)</strong>: Mirror is <strong>Centered</strong>.</li>
+            </ul>
+            <div class="info-box">
+              Example: <code>-5</code> means the mirror is tilted slightly to the left or down from its default position.
+            </div>
           </div>
         </section>
 

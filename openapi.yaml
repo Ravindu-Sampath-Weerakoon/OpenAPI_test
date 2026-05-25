@@ -1,13 +1,19 @@
 openapi: 3.1.0
 info:
   title: Vehicle Body Control API
-  version: 1.1.0
+  version: 1.1.1
   description: |
     Concise User Manual / Integration Guide for the Door, Centre Lock, Power Mirror and Rear Boot Door Control module.
 
     **Networking Details:**
     This API is hosted by an ESP32 configured in **Station (STA) Mode**. 
     It connects to a local Wi-Fi network (e.g., 'Dialog 4G 048') and receives a dynamic IP address from the router.
+
+    **Understanding Mirror Positions:**
+    The `power_mirror_left_position` and `power_mirror_right_position` values represent the current displacement from the neutral (center) point.
+    - **Positive Values (e.g., 12):** Indicate an offset in the positive axis (typically Up or Right).
+    - **Negative Values (e.g., -5):** Indicate an offset in the negative axis (typically Down or Left).
+    - **Zero (0):** Indicates the mirror is perfectly centered.
 
     **Integration steps for development:**
     1. Ensure the ESP32 is powered and connected to the same Wi-Fi network as the client.
@@ -160,11 +166,19 @@ components:
           example: locked
         power_mirror_left_position:
           type: integer
-          description: Position of the left power mirror.
+          description: |
+            Current horizontal/vertical offset of the left mirror from center.
+            - Positive: Right/Up tilt
+            - Negative: Left/Down tilt
+            - Zero: Centered
           example: 12
         power_mirror_right_position:
           type: integer
-          description: Position of the right power mirror.
+          description: |
+            Current horizontal/vertical offset of the right mirror from center.
+            - Positive: Right/Up tilt
+            - Negative: Left/Down tilt
+            - Zero: Centered
           example: -5
         rear_boot_door_status:
           type: string
