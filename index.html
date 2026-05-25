@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>ESP32 Vehicle Submodule API Documentation</title>
+    <title>Vehicle Body Control API Documentation</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,600,700|Roboto:300,400,500,700" rel="stylesheet" />
@@ -186,9 +186,10 @@
   <body>
     <header>
       <div class="container">
-        <h1>ESP32 Vehicle Submodule API Documentation</h1>
+        <h1>Vehicle Body Control API Documentation</h1>
         <p class="subtitle">
-          This documentation is for a vehicle submodule developed using one ESP32 configured as a Wi-Fi Access Point.
+          This documentation is for the Door, Centre Lock, Power Mirror and Rear Boot Door Control module, 
+          developed using one ESP32 configured as a Wi-Fi Access Point.
           The ESP32 hosts a web server on port 80 and returns JSON data for the main controller board.
         </p>
         <div class="badge-row">
@@ -210,12 +211,12 @@
               <li>Connect the main controller board or test device to the ESP32 Access Point.</li>
               <li>Send an HTTP GET request to <span class="endpoint">http://192.168.8.171/</span>.</li>
               <li>Read the returned JSON response.</li>
-              <li>Use <code>status</code>, <code>data.canOperate</code>, <code>data.warnings</code>, and <code>error</code> to decide the controller action.</li>
+              <li>Use <code>status</code>, <code>driveStatus</code>, and <code>error</code> to decide the controller action.</li>
             </ol>
           </div>
 
           <div class="card">
-            <h2>Warning vs Error Rule</h2>
+            <h2>Safety Rule</h2>
             <table class="status-table">
               <tr>
                 <th>Type</th>
@@ -223,19 +224,14 @@
                 <th>Controller Action</th>
               </tr>
               <tr>
-                <td class="success">Success</td>
-                <td>Module works normally.</td>
+                <td class="success">SAFE_TO_DRIVE</td>
+                <td>Module works normally and vehicle is safe.</td>
                 <td>Continue operation.</td>
               </tr>
               <tr>
-                <td class="warning">Warning</td>
-                <td>Module can still work, but there is a condition to monitor.</td>
-                <td>Continue operation and display/log warning.</td>
-              </tr>
-              <tr>
-                <td class="error">Error</td>
-                <td>Module cannot safely work.</td>
-                <td>Stop or ignore this module until fixed.</td>
+                <td class="error">RISK_DETECTED</td>
+                <td>A safety risk is detected (e.g., door open).</td>
+                <td>Stop or alert the user.</td>
               </tr>
             </table>
           </div>
@@ -244,29 +240,25 @@
         <section class="card">
           <h2>Common JSON Response Structure</h2>
           <pre><code>{
-  "module": "vehicle_submodule",
+  "module": "Door, Centre Lock, Power Mirror and Rear Boot Door Control",
   "status": "success",
-  "message": "Module is working normally",
+  "message": "Vehicle body control data retrieved successfully",
+  "driveStatus": "SAFE_TO_DRIVE",
+  "riskMessage": "No body control risk detected.",
   "data": {
-    "id": 1,
-    "canOperate": true,
-    "mode": "active",
-    "batteryVoltage": 7.4,
-    "signalStrength": -45,
-    "sensorStatus": {
-      "ultrasonic": "ok",
-      "irSensor": "ok",
-      "motorDriver": "ok"
-    },
-    "readings": {
-      "distanceCm": 35.2,
-      "speedRpm": 120
-    },
-    "warnings": []
+    "front_left_door_status": "closed",
+    "front_right_door_status": "closed",
+    "rear_left_door_status": "closed",
+    "rear_right_door_status": "closed",
+    "centre_lock_status": "locked",
+    "power_mirror_left_position": 12,
+    "power_mirror_right_position": -5,
+    "rear_boot_door_status": "closed",
+    "error_status": "OK"
   },
   "error": {
     "code": 0,
-    "message": "none"
+    "message": "None"
   }
 }</code></pre>
         </section>
@@ -275,7 +267,7 @@
       <section class="redoc-section">
         <div class="redoc-title container">
           <h2>OpenAPI Specification</h2>
-          <p>The detailed endpoint, schema, success response, warning response, and error response are loaded from <code>openapi_updated.yaml</code>.</p>
+          <p>The detailed endpoint, schema, success response, and error response are loaded from <code>openapi_updated.yaml</code>.</p>
         </div>
         <redoc spec-url="openapi_updated.yaml"></redoc>
       </section>

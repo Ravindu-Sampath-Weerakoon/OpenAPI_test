@@ -1,9 +1,9 @@
 openapi: 3.1.0
 info:
-  title: ESP32 Vehicle Submodule API
+  title: Vehicle Body Control API
   version: 1.0.0
   description: |
-    Concise User Manual / Integration Guide
+    Concise User Manual / Integration Guide for the Door, Centre Lock, Power Mirror and Rear Boot Door Control module.
 
     This API is hosted by one ESP32 configured as a Wi-Fi Access Point.
     The ESP32 hosts a web server on port 80 and returns a JSON response at:
@@ -13,102 +13,47 @@ info:
     1. Connect to the ESP32 Wi-Fi Access Point.
     2. Send an HTTP GET request to http://192.168.8.171/
     3. Read the JSON response.
-    4. If status is "success" and data.canOperate is true, the main controller can continue using the module.
-    5. If status is "success" but warnings are present, the system can still operate, but the controller should display/log the warning.
-    6. If status is "error" or data.canOperate is false, the main controller must stop or ignore this module until the error is fixed.
+    4. If status is "success" and driveStatus is "SAFE_TO_DRIVE", the vehicle can operate safely.
+    5. If status is "error" or driveStatus indicates a risk, the controller should take appropriate action.
 
-    Warning vs Error rule:
-    - Warning: module can still work.
-    - Error: module cannot safely work.
 servers:
   - url: http://192.168.8.171
     description: ESP32 Wi-Fi Access Point web server on port 80
 paths:
   /:
     get:
-      summary: Get vehicle submodule JSON status
-      description: Returns the assigned vehicle submodule status, data, warnings, and error information.
-      operationId: getVehicleSubmoduleStatus
+      summary: Get vehicle body control status
+      description: Returns the status of doors, centre lock, power mirrors, and rear boot door.
+      operationId: getVehicleBodyControlStatus
       responses:
         '200':
-          description: JSON response from the ESP32 vehicle submodule
+          description: JSON response from the vehicle body control module
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/VehicleSubmoduleResponse'
+                $ref: '#/components/schemas/VehicleBodyControlResponse'
               examples:
                 success:
                   summary: Normal working response
                   value:
-                    module: vehicle_submodule
+                    module: "Door, Centre Lock, Power Mirror and Rear Boot Door Control"
                     status: success
-                    message: Module is working normally
+                    message: Vehicle body control data retrieved successfully
+                    driveStatus: SAFE_TO_DRIVE
+                    riskMessage: No body control risk detected.
                     data:
-                      id: 1
-                      canOperate: true
-                      mode: active
-                      batteryVoltage: 7.4
-                      signalStrength: -45
-                      sensorStatus:
-                        ultrasonic: ok
-                        irSensor: ok
-                        motorDriver: ok
-                      readings:
-                        distanceCm: 35.2
-                        speedRpm: 120
-                      warnings: []
+                      front_left_door_status: closed
+                      front_right_door_status: closed
+                      rear_left_door_status: closed
+                      rear_right_door_status: closed
+                      centre_lock_status: locked
+                      power_mirror_left_position: 12
+                      power_mirror_right_position: -5
+                      rear_boot_door_status: closed
+                      error_status: OK
                     error:
                       code: 0
-                      message: none
-                warning:
-                  summary: Warning response; system can still operate
-                  value:
-                    module: vehicle_submodule
-                    status: success
-                    message: Module is working with warning
-                    data:
-                      id: 1
-                      canOperate: true
-                      mode: active
-                      batteryVoltage: 6.6
-                      signalStrength: -70
-                      sensorStatus:
-                        ultrasonic: ok
-                        irSensor: ok
-                        motorDriver: ok
-                      readings:
-                        distanceCm: 42.8
-                        speedRpm: 95
-                      warnings:
-                        - code: WARN_LOW_BATTERY
-                          message: Battery voltage is low, but module can still operate
-                          severity: warning
-                    error:
-                      code: 0
-                      message: none
-                error:
-                  summary: Error response; system cannot operate safely
-                  value:
-                    module: vehicle_submodule
-                    status: error
-                    message: Module cannot operate due to sensor failure
-                    data:
-                      id: 1
-                      canOperate: false
-                      mode: fault
-                      batteryVoltage: 7.2
-                      signalStrength: -50
-                      sensorStatus:
-                        ultrasonic: failed
-                        irSensor: ok
-                        motorDriver: ok
-                      readings:
-                        distanceCm: null
-                        speedRpm: 0
-                      warnings: []
-                    error:
-                      code: ERR_SENSOR_FAILURE
-                      message: Ultrasonic sensor is not responding
+                      message: "None"
   /ping:
     get:
       summary: Server check
@@ -128,7 +73,7 @@ paths:
                 properties:
                   module:
                     type: string
-                    example: vehicle_submodule
+                    example: "Door, Centre Lock, Power Mirror and Rear Boot Door Control"
                   status:
                     type: string
                     enum:
@@ -138,19 +83,21 @@ paths:
                     example: ESP32 server is online
 components:
   schemas:
-    VehicleSubmoduleResponse:
+    VehicleBodyControlResponse:
       type: object
       required:
         - module
         - status
         - message
+        - driveStatus
+        - riskMessage
         - data
         - error
       properties:
         module:
           type: string
           description: Name of the assigned vehicle submodule.
-          example: vehicle_submodule
+          example: "Door, Centre Lock, Power Mirror and Rear Boot Door Control"
         status:
           type: string
           description: Overall result of the module response.
@@ -161,106 +108,68 @@ components:
         message:
           type: string
           description: Human-readable summary of the current module state.
-          example: Module is working normally
+          example: Vehicle body control data retrieved successfully
+        driveStatus:
+          type: string
+          description: Safety status for driving.
+          example: SAFE_TO_DRIVE
+        riskMessage:
+          type: string
+          description: Description of any detected risks.
+          example: No body control risk detected.
         data:
-          $ref: '#/components/schemas/VehicleSubmoduleData'
+          $ref: '#/components/schemas/VehicleBodyControlData'
         error:
           $ref: '#/components/schemas/ErrorInfo'
-    VehicleSubmoduleData:
+    VehicleBodyControlData:
       type: object
       required:
-        - id
-        - canOperate
-        - mode
-        - sensorStatus
-        - readings
-        - warnings
+        - front_left_door_status
+        - front_right_door_status
+        - rear_left_door_status
+        - rear_right_door_status
+        - centre_lock_status
+        - power_mirror_left_position
+        - power_mirror_right_position
+        - rear_boot_door_status
+        - error_status
       properties:
-        id:
+        front_left_door_status:
+          type: string
+          description: Status of the front left door.
+          example: closed
+        front_right_door_status:
+          type: string
+          description: Status of the front right door.
+          example: closed
+        rear_left_door_status:
+          type: string
+          description: Status of the rear left door.
+          example: closed
+        rear_right_door_status:
+          type: string
+          description: Status of the rear right door.
+          example: closed
+        centre_lock_status:
+          type: string
+          description: Status of the centre lock.
+          example: locked
+        power_mirror_left_position:
           type: integer
-          description: Unique identifier for the module within the network.
-          example: 1
-        canOperate:
-          type: boolean
-          description: True means the vehicle can continue operating with this module. False means operation must stop or the module must be ignored.
-          example: true
-        mode:
-          type: string
-          description: Current operating mode of the module.
-          enum:
-            - active
-            - standby
-            - fault
-          example: active
-        batteryVoltage:
-          type: number
-          format: float
-          description: Current module battery voltage in volts.
-          example: 7.4
-        signalStrength:
+          description: Position of the left power mirror.
+          example: 12
+        power_mirror_right_position:
           type: integer
-          description: Wi-Fi signal strength in dBm.
-          example: -45
-        sensorStatus:
-          type: object
-          description: Status of hardware parts connected to the ESP32 module.
-          additionalProperties:
-            type: string
-            enum:
-              - ok
-              - warning
-              - failed
-              - not_connected
-          example:
-            ultrasonic: ok
-            irSensor: ok
-            motorDriver: ok
-        readings:
-          type: object
-          description: Live readings sent from the module to the main controller board.
-          properties:
-            distanceCm:
-              type:
-                - number
-                - 'null'
-              format: float
-              description: Distance reading in centimeters.
-              example: 35.2
-            speedRpm:
-              type: integer
-              description: Motor speed in revolutions per minute.
-              example: 120
-          additionalProperties: true
-        warnings:
-          type: array
-          description: Warning list. The system can still operate when warnings exist.
-          items:
-            $ref: '#/components/schemas/WarningInfo'
-    WarningInfo:
-      type: object
-      required:
-        - code
-        - message
-        - severity
-      properties:
-        code:
+          description: Position of the right power mirror.
+          example: -5
+        rear_boot_door_status:
           type: string
-          description: Warning code for the main controller.
-          enum:
-            - WARN_LOW_BATTERY
-            - WARN_WEAK_WIFI
-            - WARN_SENSOR_UNSTABLE
-            - WARN_HIGH_TEMPERATURE
-          example: WARN_LOW_BATTERY
-        message:
+          description: Status of the rear boot door.
+          example: closed
+        error_status:
           type: string
-          description: Human-readable warning message.
-          example: Battery voltage is low, but module can still operate
-        severity:
-          type: string
-          enum:
-            - warning
-          example: warning
+          description: Internal module error status.
+          example: OK
     ErrorInfo:
       type: object
       required:
@@ -274,8 +183,8 @@ components:
           description: 0 when there is no error. Error code when status is error.
           examples:
             - 0
-            - ERR_SENSOR_FAILURE
+            - ERR_MODULE_FAILURE
         message:
           type: string
-          description: Error description. Use "none" when there is no error.
-          example: none
+          description: Error description. Use "None" when there is no error.
+          example: "None"
