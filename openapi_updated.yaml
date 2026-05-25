@@ -1,24 +1,28 @@
 openapi: 3.1.0
 info:
   title: Vehicle Body Control API
-  version: 1.0.0
+  version: 1.1.0
   description: |
     Concise User Manual / Integration Guide for the Door, Centre Lock, Power Mirror and Rear Boot Door Control module.
 
-    This API is hosted by one ESP32 configured as a Wi-Fi Access Point.
-    The ESP32 hosts a web server on port 80 and returns a JSON response at:
-    http://192.168.8.171/
+    **Networking Details:**
+    This API is hosted by an ESP32 configured in **Station (STA) Mode**. 
+    It connects to a local Wi-Fi network (e.g., 'Dialog 4G 048') and receives a dynamic IP address from the router.
 
-    Integration steps for another development team:
-    1. Connect to the ESP32 Wi-Fi Access Point.
-    2. Send an HTTP GET request to http://192.168.8.171/
-    3. Read the JSON response.
-    4. If status is "success" and driveStatus is "SAFE_TO_DRIVE", the vehicle can operate safely.
-    5. If status is "error" or driveStatus indicates a risk, the controller should take appropriate action.
+    **Integration steps for development:**
+    1. Ensure the ESP32 is powered and connected to the same Wi-Fi network as the client.
+    2. Check the ESP32 Serial Monitor to find its **assigned IP address**.
+    3. Send an HTTP GET request to `http://<ESP32_IP_ADDRESS>/`
+    4. Read the JSON response.
+    5. If status is "success" and `driveStatus` is "SAFE_TO_DRIVE", the vehicle can operate safely.
 
 servers:
-  - url: http://192.168.8.171
-    description: ESP32 Wi-Fi Access Point web server on port 80
+  - url: http://{esp32_ip}
+    description: ESP32 Web Server (Dynamic IP)
+    variables:
+      esp32_ip:
+        default: "192.168.x.x"
+        description: The dynamic IP address assigned to the ESP32 by the router (check Serial Monitor).
 paths:
   /:
     get:

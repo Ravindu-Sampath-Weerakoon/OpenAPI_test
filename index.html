@@ -189,12 +189,12 @@
         <h1>Vehicle Body Control API Documentation</h1>
         <p class="subtitle">
           This documentation is for the Door, Centre Lock, Power Mirror and Rear Boot Door Control module, 
-          developed using one ESP32 configured as a Wi-Fi Access Point.
-          The ESP32 hosts a web server on port 80 and returns JSON data for the main controller board.
+          developed using an ESP32 configured in <strong>Station (STA) Mode</strong>.
+          The ESP32 connects to a Wi-Fi network and hosts a web server on port 80.
         </p>
         <div class="badge-row">
-          <span class="badge">Wi-Fi Access Point</span>
-          <span class="badge">Server: http://192.168.8.171</span>
+          <span class="badge">Wi-Fi Station Mode</span>
+          <span class="badge">Dynamic IP Addressing</span>
           <span class="badge">Port: 80</span>
           <span class="badge">Response Type: JSON</span>
         </div>
@@ -208,10 +208,10 @@
             <h2>Integration Steps</h2>
             <ol>
               <li>Power on the ESP32 vehicle submodule.</li>
-              <li>Connect the main controller board or test device to the ESP32 Access Point.</li>
-              <li>Send an HTTP GET request to <span class="endpoint">http://192.168.8.171/</span>.</li>
-              <li>Read the returned JSON response.</li>
-              <li>Use <code>status</code>, <code>driveStatus</code>, and <code>error</code> to decide the controller action.</li>
+              <li>Ensure it connects to the Wi-Fi network (SSID: <code>Dialog 4G 048</code>).</li>
+              <li>Open the ESP32 Serial Monitor to find the <strong>Assigned IP Address</strong>.</li>
+              <li>Send an HTTP GET request to <span class="endpoint">http://&lt;ESP32_IP&gt;/</span>.</li>
+              <li>Read the returned JSON response and check <code>driveStatus</code>.</li>
             </ol>
           </div>
 
@@ -267,7 +267,7 @@
       <section class="redoc-section">
         <div class="redoc-title container">
           <h2>OpenAPI Specification</h2>
-          <p>The detailed endpoint, schema, success response, and error response are loaded from <code>openapi_updated.yaml</code>.</p>
+          <p>The detailed endpoint, schema, and server configuration are loaded from <code>openapi_updated.yaml</code>.</p>
         </div>
         <redoc spec-url="openapi_updated.yaml"></redoc>
       </section>
