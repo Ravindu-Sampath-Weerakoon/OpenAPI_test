@@ -20,255 +20,113 @@
         --border: #e2e8f0;
       }
 
-      * {
-        box-sizing: border-box;
-      }
-
-      body {
-        margin: 0;
-        padding: 0;
-        font-family: Roboto, Arial, sans-serif;
-        background: var(--background);
-        color: var(--text);
-      }
-
-      header {
-        background: linear-gradient(135deg, var(--primary), var(--secondary));
-        color: white;
-        padding: 40px 24px;
-      }
-
-      .container {
-        max-width: 1180px;
-        margin: 0 auto;
-      }
-
-      h1,
-      h2,
-      h3 {
-        font-family: Montserrat, Arial, sans-serif;
-        margin-top: 0;
-      }
-
-      h1 {
-        font-size: 34px;
-        margin-bottom: 10px;
-      }
-
-      .subtitle {
-        font-size: 17px;
-        line-height: 1.6;
-        max-width: 900px;
-        opacity: 0.92;
-        margin: 0;
-      }
-
-      .badge-row {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 10px;
-        margin-top: 20px;
-      }
-
-      .badge {
-        background: rgba(255, 255, 255, 0.12);
-        border: 1px solid rgba(255, 255, 255, 0.22);
-        border-radius: 999px;
-        padding: 8px 12px;
-        font-size: 14px;
-      }
-
-      main {
-        padding: 28px 24px;
-      }
-
-      .grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-        gap: 18px;
-        margin-bottom: 24px;
-      }
-
-      .card {
-        background: var(--card);
-        border: 1px solid var(--border);
-        border-radius: 14px;
-        padding: 20px;
-        box-shadow: 0 8px 22px rgba(15, 23, 42, 0.06);
-      }
-
-      .card h2 {
-        font-size: 20px;
-        color: var(--primary);
-        margin-bottom: 12px;
-      }
-
-      .card p,
-      .card li {
-        line-height: 1.6;
-      }
-
-      .status-table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-top: 12px;
-      }
-
-      .status-table th,
-      .status-table td {
-        border: 1px solid var(--border);
-        padding: 10px;
-        text-align: left;
-        vertical-align: top;
-      }
-
-      .status-table th {
-        background: #f1f5f9;
-        color: var(--primary);
-      }
-
-      .success {
-        color: var(--success);
-        font-weight: 700;
-      }
-
-      .warning {
-        color: var(--warning);
-        font-weight: 700;
-      }
-
-      .error {
-        color: var(--error);
-        font-weight: 700;
-      }
-
-      pre {
-        background: #020617;
-        color: #e2e8f0;
-        padding: 18px;
-        border-radius: 12px;
-        overflow-x: auto;
-        font-size: 14px;
-        line-height: 1.5;
-      }
-
-      code {
-        font-family: Consolas, Monaco, monospace;
-      }
-
-      .endpoint {
-        display: inline-block;
-        background: #dbeafe;
-        color: #1e40af;
-        border-radius: 8px;
-        padding: 4px 8px;
-        font-family: Consolas, Monaco, monospace;
-        font-size: 14px;
-      }
-
-      .redoc-section {
-        margin-top: 28px;
-        background: white;
-        border-top: 4px solid var(--accent);
-      }
-
-      .redoc-title {
-        padding: 24px 24px 0;
-      }
-
-      redoc {
-        display: block;
-        min-height: 720px;
-      }
-
-      .info-box {
-        background: #eff6ff;
-        border-left: 4px solid var(--accent);
-        padding: 16px;
-        margin-top: 12px;
-        border-radius: 4px;
-      }
+      * { box-sizing: border-box; }
+      body { margin: 0; padding: 0; font-family: Roboto, sans-serif; background: var(--background); color: var(--text); }
+      header { background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; padding: 40px 24px; }
+      .container { max-width: 1180px; margin: 0 auto; }
+      h1, h2, h3 { font-family: Montserrat, sans-serif; margin-top: 0; }
+      h1 { font-size: 34px; margin-bottom: 10px; }
+      .subtitle { font-size: 17px; line-height: 1.6; max-width: 900px; opacity: 0.92; margin: 0; }
+      .badge-row { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 20px; }
+      .badge { background: rgba(255, 255, 255, 0.12); border: 1px solid rgba(255, 255, 255, 0.22); border-radius: 999px; padding: 8px 12px; font-size: 14px; }
+      main { padding: 28px 24px; }
+      .card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 24px; box-shadow: 0 8px 22px rgba(15, 23, 42, 0.06); margin-bottom: 24px; }
+      .card h2 { font-size: 22px; color: var(--primary); margin-bottom: 16px; border-bottom: 2px solid var(--background); padding-bottom: 8px; }
+      .variable-list { list-style: none; padding: 0; }
+      .variable-item { margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid var(--border); }
+      .variable-item:last-child { border-bottom: none; }
+      .var-name { font-family: Consolas, monospace; font-weight: 700; color: var(--accent); font-size: 16px; }
+      .var-type { color: var(--muted); font-size: 13px; margin-left: 8px; font-style: italic; }
+      .var-desc { margin-top: 6px; line-height: 1.6; font-size: 15px; }
+      .var-values { margin-top: 8px; font-size: 14px; color: var(--secondary); background: #f1f5f9; padding: 8px 12px; border-radius: 6px; }
+      pre { background: #020617; color: #e2e8f0; padding: 18px; border-radius: 12px; overflow-x: auto; font-size: 14px; }
+      code { font-family: Consolas, monospace; }
+      .redoc-section { margin-top: 28px; background: white; border-top: 4px solid var(--accent); }
     </style>
   </head>
-
   <body>
     <header>
       <div class="container">
         <h1>Vehicle Body Control API Documentation</h1>
-        <p class="subtitle">
-          This documentation is for the Door, Centre Lock, Power Mirror and Rear Boot Door Control module, 
-          developed using an ESP32 configured in <strong>Station (STA) Mode</strong>.
-          The ESP32 connects to a Wi-Fi network and hosts a web server on port 80.
-        </p>
+        <p class="subtitle">Detailed field-by-field breakdown of the ESP32 Vehicle Body Control JSON response.</p>
         <div class="badge-row">
           <span class="badge">Wi-Fi Station Mode</span>
-          <span class="badge">Dynamic IP Addressing</span>
-          <span class="badge">Port: 80</span>
-          <span class="badge">Response Type: JSON</span>
+          <span class="badge">JSON API</span>
+          <span class="badge">Port 80</span>
         </div>
       </div>
     </header>
 
-    <main>
-      <div class="container">
-        <section class="grid">
-          <div class="card">
-            <h2>Integration Steps</h2>
-            <ol>
-              <li>Power on the ESP32 vehicle submodule.</li>
-              <li>Ensure it connects to the Wi-Fi network (SSID: <code>Dialog 4G 048</code>).</li>
-              <li>Open the ESP32 Serial Monitor to find the <strong>Assigned IP Address</strong>.</li>
-              <li>Send an HTTP GET request to <span class="endpoint">http://&lt;ESP32_IP&gt;/</span>.</li>
-              <li>Read the returned JSON response and check <code>driveStatus</code>.</li>
-            </ol>
-          </div>
+    <main class="container">
+      <section class="card">
+        <h2>Variable Dictionary (Root Level)</h2>
+        <ul class="variable-list">
+          <li class="variable-item">
+            <span class="var-name">module</span><span class="var-type">String</span>
+            <div class="var-desc">Identifies the hardware module sending the data. Used for routing in multi-module systems.</div>
+            <div class="var-values"><strong>Value:</strong> "Door, Centre Lock, Power Mirror and Rear Boot Door Control"</div>
+          </li>
+          <li class="variable-item">
+            <span class="var-name">status</span><span class="var-type">Enum</span>
+            <div class="var-desc">Indicates if the API call was successful.</div>
+            <div class="var-values"><strong>Possible Values:</strong> "success", "error"</div>
+          </li>
+          <li class="variable-item">
+            <span class="var-name">driveStatus</span><span class="var-type">String</span>
+            <div class="var-desc">The most critical field for the main vehicle controller. Summarizes safety.</div>
+            <div class="var-values"><strong>Values:</strong> "SAFE_TO_DRIVE", "RISK_DETECTED"</div>
+          </li>
+          <li class="variable-item">
+            <span class="var-name">riskMessage</span><span class="var-type">String</span>
+            <div class="var-desc">A detailed explanation of why the vehicle might be unsafe to drive.</div>
+          </li>
+        </ul>
+      </section>
 
-          <div class="card">
-            <h2>Mirror Position Logic</h2>
-            <p>The <code>power_mirror_*_position</code> fields indicate displacement from the neutral center:</p>
-            <ul>
-              <li><strong>Positive (+)</strong>: Tilted <strong>Right</strong> or <strong>Up</strong>.</li>
-              <li><strong>Negative (-)</strong>: Tilted <strong>Left</strong> or <strong>Down</strong>.</li>
-              <li><strong>Zero (0)</strong>: Mirror is <strong>Centered</strong>.</li>
-            </ul>
-            <div class="info-box">
-              Example: <code>-5</code> means the mirror is tilted slightly to the left or down from its default position.
-            </div>
-          </div>
-        </section>
+      <section class="card">
+        <h2>Variable Dictionary (Data Object)</h2>
+        <ul class="variable-list">
+          <li class="variable-item">
+            <span class="var-name">front_left_door_status</span><span class="var-type">String</span>
+            <div class="var-desc">Physical sensor state of the driver-side front door.</div>
+            <div class="var-values"><strong>Values:</strong> "open", "closed"</div>
+          </li>
+          <li class="variable-item">
+            <span class="var-name">centre_lock_status</span><span class="var-type">String</span>
+            <div class="var-desc">State of the electronic central locking mechanism.</div>
+            <div class="var-values"><strong>Values:</strong> "locked", "unlocked"</div>
+          </li>
+          <li class="variable-item">
+            <span class="var-name">power_mirror_left_position</span><span class="var-type">Integer</span>
+            <div class="var-desc">The angular/linear offset of the mirror.</div>
+            <div class="var-values"><strong>Logic:</strong> (+) Up/Right, (-) Down/Left, (0) Centered.</div>
+          </li>
+          <li class="variable-item">
+            <span class="var-name">error_status</span><span class="var-type">String</span>
+            <div class="var-desc">Internal sensor health status reported by the ESP32.</div>
+            <div class="var-values"><strong>Example:</strong> "OK", "SENSOR_FAULT"</div>
+          </li>
+        </ul>
+        <p><em>(Note: All other door/mirror fields follow the same logic as the examples above.)</em></p>
+      </section>
 
-        <section class="card">
-          <h2>Common JSON Response Structure</h2>
-          <pre><code>{
+      <section class="card">
+        <h2>JSON Example</h2>
+        <pre><code>{
   "module": "Door, Centre Lock, Power Mirror and Rear Boot Door Control",
   "status": "success",
-  "message": "Vehicle body control data retrieved successfully",
   "driveStatus": "SAFE_TO_DRIVE",
-  "riskMessage": "No body control risk detected.",
   "data": {
     "front_left_door_status": "closed",
-    "front_right_door_status": "closed",
-    "rear_left_door_status": "closed",
-    "rear_right_door_status": "closed",
     "centre_lock_status": "locked",
     "power_mirror_left_position": 12,
-    "power_mirror_right_position": -5,
-    "rear_boot_door_status": "closed",
     "error_status": "OK"
   },
-  "error": {
-    "code": 0,
-    "message": "None"
-  }
+  "error": { "code": 0, "message": "None" }
 }</code></pre>
-        </section>
-      </div>
+      </section>
 
       <section class="redoc-section">
-        <div class="redoc-title container">
-          <h2>OpenAPI Specification</h2>
-          <p>The detailed endpoint, schema, and server configuration are loaded from <code>openapi_updated.yaml</code>.</p>
-        </div>
         <redoc spec-url="openapi_updated.yaml"></redoc>
       </section>
     </main>

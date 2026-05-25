@@ -1,26 +1,17 @@
 openapi: 3.1.0
 info:
   title: Vehicle Body Control API
-  version: 1.1.1
+  version: 1.2.0
   description: |
     Concise User Manual / Integration Guide for the Door, Centre Lock, Power Mirror and Rear Boot Door Control module.
 
     **Networking Details:**
-    This API is hosted by an ESP32 configured in **Station (STA) Mode**. 
-    It connects to a local Wi-Fi network (e.g., 'Dialog 4G 048') and receives a dynamic IP address from the router.
+    This API is hosted by an ESP32 in **Station (STA) Mode**. It connects to 'Dialog 4G 048' and uses a dynamic IP address.
 
-    **Understanding Mirror Positions:**
-    The `power_mirror_left_position` and `power_mirror_right_position` values represent the current displacement from the neutral (center) point.
-    - **Positive Values (e.g., 12):** Indicate an offset in the positive axis (typically Up or Right).
-    - **Negative Values (e.g., -5):** Indicate an offset in the negative axis (typically Down or Left).
-    - **Zero (0):** Indicates the mirror is perfectly centered.
-
-    **Integration steps for development:**
-    1. Ensure the ESP32 is powered and connected to the same Wi-Fi network as the client.
-    2. Check the ESP32 Serial Monitor to find its **assigned IP address**.
-    3. Send an HTTP GET request to `http://<ESP32_IP_ADDRESS>/`
-    4. Read the JSON response.
-    5. If status is "success" and `driveStatus` is "SAFE_TO_DRIVE", the vehicle can operate safely.
+    **Mirror Position Logic:**
+    - **Positive (+)**: Tilted Right/Up.
+    - **Negative (-)**: Tilted Left/Down.
+    - **Zero (0)**: Centered.
 
 servers:
   - url: http://{esp32_ip}
@@ -28,16 +19,16 @@ servers:
     variables:
       esp32_ip:
         default: "192.168.x.x"
-        description: The dynamic IP address assigned to the ESP32 by the router (check Serial Monitor).
+        description: The dynamic IP address assigned to the ESP32 (check Serial Monitor).
 paths:
   /:
     get:
       summary: Get vehicle body control status
-      description: Returns the status of doors, centre lock, power mirrors, and rear boot door.
+      description: Returns the full status of all body control sub-systems.
       operationId: getVehicleBodyControlStatus
       responses:
         '200':
-          description: JSON response from the vehicle body control module
+          description: Detailed JSON response
           content:
             application/json:
               schema:
@@ -64,68 +55,31 @@ paths:
                     error:
                       code: 0
                       message: "None"
-  /ping:
-    get:
-      summary: Server check
-      description: Simple health check endpoint for testing whether the ESP32 web server is online.
-      operationId: pingServer
-      responses:
-        '200':
-          description: Server is online
-          content:
-            application/json:
-              schema:
-                type: object
-                required:
-                  - module
-                  - status
-                  - message
-                properties:
-                  module:
-                    type: string
-                    example: "Door, Centre Lock, Power Mirror and Rear Boot Door Control"
-                  status:
-                    type: string
-                    enum:
-                      - success
-                  message:
-                    type: string
-                    example: ESP32 server is online
 components:
   schemas:
     VehicleBodyControlResponse:
       type: object
-      required:
-        - module
-        - status
-        - message
-        - driveStatus
-        - riskMessage
-        - data
-        - error
+      required: [module, status, message, driveStatus, riskMessage, data, error]
       properties:
         module:
           type: string
-          description: Name of the assigned vehicle submodule.
+          description: "**(String)** The name of the specific hardware module. Identifies this as the Body Control unit."
           example: "Door, Centre Lock, Power Mirror and Rear Boot Door Control"
         status:
           type: string
-          description: Overall result of the module response.
-          enum:
-            - success
-            - error
+          description: "**(Enum: success, error)** The high-level result of the request. 'success' means data was read from sensors."
           example: success
         message:
           type: string
-          description: Human-readable summary of the current module state.
+          description: "**(String)** A human-readable summary of the current system state."
           example: Vehicle body control data retrieved successfully
         driveStatus:
           type: string
-          description: Safety status for driving.
+          description: "**(String)** Safety flag for the main vehicle controller. Usually 'SAFE_TO_DRIVE' or 'RISK_DETECTED'."
           example: SAFE_TO_DRIVE
         riskMessage:
           type: string
-          description: Description of any detected risks.
+          description: "**(String)** Explains why a risk was detected (e.g., 'Front Left Door Open')."
           example: No body control risk detected.
         data:
           $ref: '#/components/schemas/VehicleBodyControlData'
@@ -133,6 +87,7 @@ components:
           $ref: '#/components/schemas/ErrorInfo'
     VehicleBodyControlData:
       type: object
+      description: "Contains the live hardware sensor readings."
       required:
         - front_left_door_status
         - front_right_door_status
@@ -146,63 +101,49 @@ components:
       properties:
         front_left_door_status:
           type: string
-          description: Status of the front left door.
+          description: "**(String: open/closed)** Current physical state of the front-left door."
           example: closed
         front_right_door_status:
           type: string
-          description: Status of the front right door.
+          description: "**(String: open/closed)** Current physical state of the front-right door."
           example: closed
         rear_left_door_status:
           type: string
-          description: Status of the rear left door.
+          description: "**(String: open/closed)** Current physical state of the rear-left door."
           example: closed
         rear_right_door_status:
           type: string
-          description: Status of the rear right door.
+          description: "**(String: open/closed)** Current physical state of the rear-right door."
           example: closed
         centre_lock_status:
           type: string
-          description: Status of the centre lock.
+          description: "**(String: locked/unlocked)** State of the central locking system for all passenger doors."
           example: locked
         power_mirror_left_position:
           type: integer
-          description: |
-            Current horizontal/vertical offset of the left mirror from center.
-            - Positive: Right/Up tilt
-            - Negative: Left/Down tilt
-            - Zero: Centered
+          description: "**(Integer)** Displacement of left mirror. Positive = Up/Right, Negative = Down/Left, 0 = Center."
           example: 12
         power_mirror_right_position:
           type: integer
-          description: |
-            Current horizontal/vertical offset of the right mirror from center.
-            - Positive: Right/Up tilt
-            - Negative: Left/Down tilt
-            - Zero: Centered
+          description: "**(Integer)** Displacement of right mirror. Positive = Up/Right, Negative = Down/Left, 0 = Center."
           example: -5
         rear_boot_door_status:
           type: string
-          description: Status of the rear boot door.
+          description: "**(String: open/closed)** Current physical state of the trunk/boot door."
           example: closed
         error_status:
           type: string
-          description: Internal module error status.
+          description: "**(String)** Internal diagnostic code from the ESP32 sensors (e.g., 'OK', 'SENSOR_UNPLUGGED')."
           example: OK
     ErrorInfo:
       type: object
-      required:
-        - code
-        - message
+      required: [code, message]
       properties:
         code:
-          oneOf:
-            - type: integer
-            - type: string
-          description: 0 when there is no error. Error code when status is error.
-          examples:
-            - 0
-            - ERR_MODULE_FAILURE
+          oneOf: [{type: integer}, {type: string}]
+          description: "**(Int/String)** Numerical error code. '0' indicates no system-level error."
+          example: 0
         message:
           type: string
-          description: Error description. Use "None" when there is no error.
+          description: "**(String)** Detailed description of any system-level crash or failure. 'None' if healthy."
           example: "None"
