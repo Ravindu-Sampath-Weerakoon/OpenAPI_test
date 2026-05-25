@@ -7,11 +7,11 @@ info:
 
     This API is hosted by one ESP32 configured as a Wi-Fi Access Point.
     The ESP32 hosts a web server on port 80 and returns a JSON response at:
-    http://192.168.4.1/
+    http://192.168.8.171/
 
     Integration steps for another development team:
     1. Connect to the ESP32 Wi-Fi Access Point.
-    2. Send an HTTP GET request to http://192.168.4.1/
+    2. Send an HTTP GET request to http://192.168.8.171/
     3. Read the JSON response.
     4. If status is "success" and data.canOperate is true, the main controller can continue using the module.
     5. If status is "success" but warnings are present, the system can still operate, but the controller should display/log the warning.
@@ -21,7 +21,7 @@ info:
     - Warning: module can still work.
     - Error: module cannot safely work.
 servers:
-  - url: http://192.168.4.1
+  - url: http://192.168.8.171
     description: ESP32 Wi-Fi Access Point web server on port 80
 paths:
   /:
@@ -44,6 +44,7 @@ paths:
                     status: success
                     message: Module is working normally
                     data:
+                      id: 1
                       canOperate: true
                       mode: active
                       batteryVoltage: 7.4
@@ -66,6 +67,7 @@ paths:
                     status: success
                     message: Module is working with warning
                     data:
+                      id: 1
                       canOperate: true
                       mode: active
                       batteryVoltage: 6.6
@@ -91,6 +93,7 @@ paths:
                     status: error
                     message: Module cannot operate due to sensor failure
                     data:
+                      id: 1
                       canOperate: false
                       mode: fault
                       batteryVoltage: 7.2
@@ -166,12 +169,17 @@ components:
     VehicleSubmoduleData:
       type: object
       required:
+        - id
         - canOperate
         - mode
         - sensorStatus
         - readings
         - warnings
       properties:
+        id:
+          type: integer
+          description: Unique identifier for the module within the network.
+          example: 1
         canOperate:
           type: boolean
           description: True means the vehicle can continue operating with this module. False means operation must stop or the module must be ignored.
