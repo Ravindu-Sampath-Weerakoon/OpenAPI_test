@@ -1,16 +1,285 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
-    <title>API Documentation</title>
-    <meta charset="utf-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,700|Roboto:300,400,700" rel="stylesheet">
+    <title>ESP32 Vehicle Submodule API Documentation</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,600,700|Roboto:300,400,500,700" rel="stylesheet" />
     <style>
-      body { margin: 0; padding: 0; }
+      :root {
+        --primary: #0f172a;
+        --secondary: #1e293b;
+        --accent: #2563eb;
+        --success: #16a34a;
+        --warning: #f59e0b;
+        --error: #dc2626;
+        --background: #f8fafc;
+        --card: #ffffff;
+        --text: #334155;
+        --muted: #64748b;
+        --border: #e2e8f0;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: Roboto, Arial, sans-serif;
+        background: var(--background);
+        color: var(--text);
+      }
+
+      header {
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        color: white;
+        padding: 40px 24px;
+      }
+
+      .container {
+        max-width: 1180px;
+        margin: 0 auto;
+      }
+
+      h1,
+      h2,
+      h3 {
+        font-family: Montserrat, Arial, sans-serif;
+        margin-top: 0;
+      }
+
+      h1 {
+        font-size: 34px;
+        margin-bottom: 10px;
+      }
+
+      .subtitle {
+        font-size: 17px;
+        line-height: 1.6;
+        max-width: 900px;
+        opacity: 0.92;
+        margin: 0;
+      }
+
+      .badge-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 20px;
+      }
+
+      .badge {
+        background: rgba(255, 255, 255, 0.12);
+        border: 1px solid rgba(255, 255, 255, 0.22);
+        border-radius: 999px;
+        padding: 8px 12px;
+        font-size: 14px;
+      }
+
+      main {
+        padding: 28px 24px;
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        gap: 18px;
+        margin-bottom: 24px;
+      }
+
+      .card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        padding: 20px;
+        box-shadow: 0 8px 22px rgba(15, 23, 42, 0.06);
+      }
+
+      .card h2 {
+        font-size: 20px;
+        color: var(--primary);
+        margin-bottom: 12px;
+      }
+
+      .card p,
+      .card li {
+        line-height: 1.6;
+      }
+
+      .status-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 12px;
+      }
+
+      .status-table th,
+      .status-table td {
+        border: 1px solid var(--border);
+        padding: 10px;
+        text-align: left;
+        vertical-align: top;
+      }
+
+      .status-table th {
+        background: #f1f5f9;
+        color: var(--primary);
+      }
+
+      .success {
+        color: var(--success);
+        font-weight: 700;
+      }
+
+      .warning {
+        color: var(--warning);
+        font-weight: 700;
+      }
+
+      .error {
+        color: var(--error);
+        font-weight: 700;
+      }
+
+      pre {
+        background: #020617;
+        color: #e2e8f0;
+        padding: 18px;
+        border-radius: 12px;
+        overflow-x: auto;
+        font-size: 14px;
+        line-height: 1.5;
+      }
+
+      code {
+        font-family: Consolas, Monaco, monospace;
+      }
+
+      .endpoint {
+        display: inline-block;
+        background: #dbeafe;
+        color: #1e40af;
+        border-radius: 8px;
+        padding: 4px 8px;
+        font-family: Consolas, Monaco, monospace;
+        font-size: 14px;
+      }
+
+      .redoc-section {
+        margin-top: 28px;
+        background: white;
+        border-top: 4px solid var(--accent);
+      }
+
+      .redoc-title {
+        padding: 24px 24px 0;
+      }
+
+      redoc {
+        display: block;
+        min-height: 720px;
+      }
     </style>
   </head>
+
   <body>
-    <redoc spec-url="openapi.yaml"></redoc>
-    <script src="https://cdn.redoc.ly/redoc/latest/bundles/redoc.standalone.js"> </script>
+    <header>
+      <div class="container">
+        <h1>ESP32 Vehicle Submodule API Documentation</h1>
+        <p class="subtitle">
+          This documentation is for a vehicle submodule developed using one ESP32 configured as a Wi-Fi Access Point.
+          The ESP32 hosts a web server on port 80 and returns JSON data for the main controller board.
+        </p>
+        <div class="badge-row">
+          <span class="badge">Wi-Fi Access Point</span>
+          <span class="badge">Server: http://192.168.4.1</span>
+          <span class="badge">Port: 80</span>
+          <span class="badge">Response Type: JSON</span>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <div class="container">
+        <section class="grid">
+          <div class="card">
+            <h2>Integration Steps</h2>
+            <ol>
+              <li>Power on the ESP32 vehicle submodule.</li>
+              <li>Connect the main controller board or test device to the ESP32 Access Point.</li>
+              <li>Send an HTTP GET request to <span class="endpoint">http://192.168.4.1/</span>.</li>
+              <li>Read the returned JSON response.</li>
+              <li>Use <code>status</code>, <code>data.canOperate</code>, <code>data.warnings</code>, and <code>error</code> to decide the controller action.</li>
+            </ol>
+          </div>
+
+          <div class="card">
+            <h2>Warning vs Error Rule</h2>
+            <table class="status-table">
+              <tr>
+                <th>Type</th>
+                <th>Meaning</th>
+                <th>Controller Action</th>
+              </tr>
+              <tr>
+                <td class="success">Success</td>
+                <td>Module works normally.</td>
+                <td>Continue operation.</td>
+              </tr>
+              <tr>
+                <td class="warning">Warning</td>
+                <td>Module can still work, but there is a condition to monitor.</td>
+                <td>Continue operation and display/log warning.</td>
+              </tr>
+              <tr>
+                <td class="error">Error</td>
+                <td>Module cannot safely work.</td>
+                <td>Stop or ignore this module until fixed.</td>
+              </tr>
+            </table>
+          </div>
+        </section>
+
+        <section class="card">
+          <h2>Common JSON Response Structure</h2>
+          <pre><code>{
+  "module": "vehicle_submodule",
+  "status": "success",
+  "message": "Module is working normally",
+  "data": {
+    "canOperate": true,
+    "mode": "active",
+    "batteryVoltage": 7.4,
+    "signalStrength": -45,
+    "sensorStatus": {
+      "ultrasonic": "ok",
+      "irSensor": "ok",
+      "motorDriver": "ok"
+    },
+    "readings": {
+      "distanceCm": 35.2,
+      "speedRpm": 120
+    },
+    "warnings": []
+  },
+  "error": {
+    "code": 0,
+    "message": "none"
+  }
+}</code></pre>
+        </section>
+      </div>
+
+      <section class="redoc-section">
+        <div class="redoc-title container">
+          <h2>OpenAPI Specification</h2>
+          <p>The detailed endpoint, schema, success response, warning response, and error response are loaded from <code>openapi_updated.yaml</code>.</p>
+        </div>
+        <redoc spec-url="openapi_updated.yaml"></redoc>
+      </section>
+    </main>
+
+    <script src="https://cdn.redoc.ly/redoc/latest/bundles/redoc.standalone.js"></script>
   </body>
 </html>
